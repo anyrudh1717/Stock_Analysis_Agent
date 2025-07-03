@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+      
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>NeuraTrade</h1>
+
+        <!-- Form for entering the stock symbol -->
+        <form method="POST">
+            <div class="input-section">
+                <label for="stock_symbol">Enter Stock Symbol:</label>
+                <input type="text" id="stock_symbol" name="stock_symbol" list="stock-symbols" placeholder="e.g., TSLA" required>
+                <datalist id="stock-symbols">
+                    {% for symbol in stock_symbols %}
+                        <option value="{{ symbol }}">
+                    {% endfor %}
+                </datalist>
+            </div>
+            <button type="submit">Analyze Stock</button>
+        </form>
+
+        <!-- Check if results are present (stock price and graph) -->
+        {% if graph_html %}
+            <!-- Display Stock Price -->
+            <div class="stock-price">
+                <h2 class="{% if price_change_class == 'positive' %}positive{% elif price_change_class == 'negative' %}negative{% else %}neutral{% endif %}">
+                    {{ stock_price }}$ | {{ price_change_text }}
+                </h2>
+            </div>
+            
+
+            <!-- Display Graph -->
+            <h2>Stock Data Visualization</h2>
+            <div>{{ graph_html | safe }}</div>
+
+            <!-- Display Analysis -->
+            <div class="output-section">
+                <h2>Analysis Result:</h2>
+                <textarea id="outputField" rows="10" cols="50" readonly>{{ output_text }}</textarea>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
